@@ -1,0 +1,109 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/google-map/google-map.html">
+<link rel="import" href="bower_components/google-map/google-map-directions.html">
+<link rel="import" href="bower_components/google-map/google-map-marker.html">
+<link rel="import" href="bower_components/google-map/google-map-search.html">
+<link rel="import" href="bower_components/iron-input/iron-input.html">
+<link rel="import" href="bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="bower_components/paper-fab/paper-fab.html">
+
+<dom-module id="map-search">
+
+  <!-- scoped CSS for this element -->
+<style>
+	google-map{
+		height: 500px;
+	}
+	#inputs {
+  position: relative;
+  bottom: 80px;
+  left: 25px;
+  z-index: 100;
+  width: 200px;
+}
+
+#input_search {
+  border-radius: 7px;
+  margin-top: 5px;
+  padding-left: 50px;
+  width: 170px;
+  height: 30px;
+  box-shadow: 0;
+}
+
+#icon_search {
+	position: relative;
+	top: 35px;
+	left: 15px;
+}
+paper-fab{
+	float: right;
+	position: relative;
+	bottom: 140px;
+	right: 30px;
+	color: rgb(156, 226, 140);
+}
+ paper-fab.green {
+      --paper-fab-background: var(--paper-green-500);
+      --paper-fab-keyboard-focus-background: var(--paper-green-900);
+    }
+  </style>
+
+   <template>
+      <google-map-search map="{{map}}" query="{{consult}}"
+                         result="{{result}}"></google-map-search>
+      <google-map map="{{map}}" latitude="{{result.latitude}}"
+                  longitude="{{result.longitude}}" zoom="17">
+		 <google-map-marker draggable="true"></google-map-marker>
+      </google-map>
+
+      <div id="inputs">
+     		<iron-icon id="icon_search" icon="search"></iron-icon>
+      		<input type="text" id="input_search" height="30px" placeholder="Buscar Dirección">
+	  </div>
+
+	  <paper-fab icon="done" class='green'></paper-fab>
+      
+    </template>
+
+  <script>
+    Polymer({
+      is: "map-search",
+    });
+
+    document.addEventListener('WebComponentsReady', function() {
+      var maps = document.querySelector('google-map');
+      maps.addEventListener('google-map-ready', function(e) {    	 
+      		var searching = document.querySelector('google-map-search');
+      		var mark = document.querySelector('google-map-marker');
+
+      		searching.addEventListener('google-map-search-result',function(e){
+      			mark.latitude = e.detail.latitude;
+      			mark.longitude =e.detail.longitude;
+      		});
+
+      });
+      
+     document.getElementById('input_search').onkeypress = function(e){
+    	if (!e) e = window.event;
+    	var keyCode = e.keyCode || e.which;
+    	if (keyCode == '13'){
+      		Search();
+      		return false;
+    	}
+ 	}
+	});
+
+     function Search(){
+     	var searching = document.querySelector('google-map-search');
+     	var query = document.getElementById('input_search').value;
+     	console.log(query);
+
+     	searching.query = query;
+     	document.querySelector('google-map-search').search();
+     }
+      
+  </script>
+
+</dom-module>
