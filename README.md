@@ -1,3 +1,3 @@
 # Polymer-GoogleMap-Searching
 
-<img src="Images/example.png" alt="">
+<img src="Images/example.jpg" alt="">
